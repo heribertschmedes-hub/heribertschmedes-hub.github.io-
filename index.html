@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Update für dich</title>
+<style>
+  body { margin:0; font-family: Georgia, serif; background:#f4f1ea; color:#222; }
+  header { text-align:center; padding:30px 10px 15px; border-bottom:4px double #222; }
+  header h1 { margin:0; font-size:3rem; letter-spacing:2px; }
+  header p { margin:5px 0 0; font-style:italic; }
+  main { max-width:800px; margin:auto; padding:20px; }
+  article { background:#fff; margin-bottom:30px; padding:20px; border:1px solid #ccc; box-shadow:0 2px 6px rgba(0,0,0,.1); }
+  article h2 { margin-top:0; font-size:1.8rem; }
+  .info { color:#777; font-size:.9rem; margin-bottom:12px; }
+  article img { max-width:100%; border-radius:4px; margin-bottom:12px; }
+  footer { text-align:center; padding:20px; color:#777; font-size:.9rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>UFD</h1>
+  <p>Update für dich</p>
+</header>
+<main id="zeitung"></main>
+<footer>© Update für dich</footer>
+
+<script src="artikel.js"></script>
+<script>
+  const box = document.getElementById("zeitung");
+  const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+  ARTIKEL.forEach(a => {
+    const absaetze = a.text.split(/\n\s*\n/).map(p => "<p>" + esc(p).replace(/\n/g,"<br>") + "</p>").join("");
+    const bild = a.bild ? `<img src="bilder/${esc(a.bild)}" alt="${esc(a.titel)}">` : "";
+    box.innerHTML += `
+      <article>
+        <h2>${esc(a.titel)}</h2>
+        <div class="info">${esc(a.datum)} · von ${esc(a.autor)}</div>
+        ${bild}
+        ${absaetze}
+      </article>`;
+  });
+</script>
+</body>
+</html>
