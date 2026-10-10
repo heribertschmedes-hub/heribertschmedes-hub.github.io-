@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UFD – Artikel schreiben</title>
+<style>
+  body { font-family:sans-serif; max-width:700px; margin:auto; padding:20px; background:#f4f1ea; }
+  input, textarea { width:100%; padding:10px; margin:5px 0 15px; font-size:1rem; box-sizing:border-box; }
+  textarea { height:250px; }
+  button { padding:12px 20px; font-size:1rem; background:#222; color:#fff; border:0; cursor:pointer; }
+  #vorschau { max-width:100%; display:none; margin-bottom:10px; }
+  #ausgabe { background:#fff; border:1px solid #aaa; padding:10px; white-space:pre-wrap; font-family:monospace; }
+</style>
+</head>
+<body>
+<h1>Neuer UFD-Artikel</h1>
+
+<label>Titel</label>
+<input id="titel">
+<label>Autor</label>
+<input id="autor" value="Redaktion">
+<label>Bild (optional)</label>
+<input type="file" id="bild" accept="image/*">
+<img id="vorschau">
+<label>Text (Leerzeile = neuer Absatz)</label>
+<textarea id="text"></textarea>
+
+<button onclick="erzeugen()">Code erzeugen</button>
+<button onclick="kopieren()">Kopieren</button>
+
+<h3>Dieser Code kommt in artikel.js direkt unter die Zeile <code>const ARTIKEL = [</code>:</h3>
+<div id="ausgabe"></div>
+
+<script>
+  let bildName = "";
+  document.getElementById("bild").onchange = e => {
+    const f = e.target.files[0];
+    if (!f) return;
+    bildName = f.name.replace(/\s+/g, "_");
+    const v = document.getElementById("vorschau");
+    v.src = URL.createObjectURL(f);
+    v.style.display = "block";
+    alert('Lade das Bild später in den Ordner "bilder" hoch, mit dem Namen: ' + bildName);
+  };
+
+  function erzeugen() {
+    const d = new Date().toLocaleDateString("de-DE");
+    const a = {
+      titel: document.getElementById("titel").value,
+      autor: document.getElementById("autor").value,
+      datum: d,
+      bild: bildName,
+      text: document.getElementById("text").value
+    };
+    document.getElementById("ausgabe").textContent = JSON.stringify(a, null, 2) + ",";
+  }
+
+  function kopieren() {
+    navigator.clipboard.writeText(document.getElementById("ausgabe").textContent);
+    alert("Kopiert!");
+  }
+</script>
+</body>
+</html>
